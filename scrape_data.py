@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
-import time
+import json
 import requests
+import time
 from bs4 import BeautifulSoup
 
 # Idea of this script and the Slack Bot:
@@ -73,7 +74,7 @@ for gameweek in range(1, 39):
     for fixture in fixtures:
         home_team = fixture.find("div", "equipo-local").find("span", "nombre-equipo").string
         away_team = fixture.find("div", "equipo-visitante").find("span", "nombre-equipo").string
-        game_datetime_utc = fixture.find("time", attrs={"itemprop": "startDate"})['content']
+        game_datetime_utc = fixture.find("time", attrs={"itemprop": "startDate"})['content'].split('+')[0]
         fixture_obj = {"home": home_team, "away": away_team, "datetime_utc": game_datetime_utc}
         all_fixtures.append(fixture_obj)
 
@@ -81,5 +82,10 @@ for gameweek in range(1, 39):
     print("Finished with Gameweek {}, sleeping for 5 seconds...".format(gameweek))
     time.sleep(5)
 
-print(all_fixtures)
+# Save to local file (for now)
+fixture_filename = "./fixtures.json"
+print("Done, dumping to {}".format(fixture_filename))
+with open(fixture_filename, 'w') as fixture_file:
+    json.dump(all_fixtures, fixture_file)
+
 
