@@ -62,6 +62,4 @@ If there are "match ups" tomorrow, this will send a Slack message to the given c
 There are some match ups tomorrow!
   07am - Leeds (@Person) vs. Wolves (@OtherPerson)
   07am - Tottenham (@AnotherPerson) vs. Southampton (@MorePeople)
-
-
-
+```
