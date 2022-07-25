@@ -1,5 +1,12 @@
 # Premier League Match Bot
 
+## My Useful Commands
+```
+python3 get_channels.py -c .credentials/cavilist_channel_credentials
+python3 get_channel_users.py -c .credentials/cavilist_channel_credentials
+python3 notify_slack.py -c .credentials/cavilist_channel_credentials -ch C0MKGPY1K -p .users/cavilist.json
+```
+
 ## State of Development
 Current implementation as of 2022-07-24:
 * Script for scraping Premier League 2022 fixture data from en.as.com and saving to a local `fixtures.json` file
