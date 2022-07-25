@@ -83,8 +83,7 @@ for fixture in all_fixtures:
             fixture_notifications.append(fixture)
 
 # Build the notification message
-message = "Test notification"
-#message = "There are some match ups tomorrow!"
+message = "There are some match ups tomorrow!"
 for fixture in fixture_notifications:
     message = message + "\n"
 
