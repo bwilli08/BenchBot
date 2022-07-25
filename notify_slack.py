@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
 import argparse
 import json
 import logging
@@ -82,27 +85,29 @@ for fixture in all_fixtures:
             fixture['datetime_utc'] = fixture_datetime
             fixture_notifications.append(fixture)
 
-# Build the notification message
-message = "There are some match ups tomorrow!"
-for fixture in fixture_notifications:
-    message = message + "\n"
+# If there are match ups, build the notification message
+if fixture_notifications:
+    message = "There are some match ups tomorrow!"
+    for fixture in fixture_notifications:
+        message = message + "\n"
 
-    fixture_datetime = fixture['datetime_utc']
-    in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
-    friendly_time = in_pst.strftime("%I%p").lower()
+        fixture_datetime = fixture['datetime_utc']
+        in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
+        friendly_time = in_pst.strftime("%I%p").lower()
 
-    home = fixture['home']
-    away = fixture['away']
-    line = "  {} - {} (<@{}>) vs. {} (<@{}>)".format(friendly_time, home, club_to_person[home], away, club_to_person[away])
-    message = message + line
+        home = fixture['home']
+        away = fixture['away']
+        line = "  {} - {} (<@{}>) vs. {} (<@{}>)".format(friendly_time, home, club_to_person[home], away, club_to_person[away])
+        message = message + line
 
-# Initializes the web client with your bot token
-client = WebClient(token=SLACK_BOT_TOKEN)
-logger = logging.getLogger(__name__)
+    client = WebClient(token=SLACK_BOT_TOKEN)
+    logger = logging.getLogger(__name__)
 
-channel_id = args.channel
-try:
-    result = client.chat_postMessage(channel=channel_id, text=message)
-except SlackApiError as e:
-    print(f"Error: {e}")
-
+    channel_id = args.channel
+    try:
+        client.chat_postMessage(channel=channel_id, text=message)
+        print("Done!")
+    except SlackApiError as e:
+        print(f"Error: {e}")
+else:
+    print("No match ups tomorrow, done!")
