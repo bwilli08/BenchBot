@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
+import argparse
 import json
 import requests
 import time
@@ -65,6 +66,13 @@ from bs4 import BeautifulSoup
 '''
 en_as_com_url = "https://en.as.com/resultados/futbol/inglaterra/2022_2023/jornada/regular_a_"
 
+
+# Read input from command line
+parser = argparse.ArgumentParser(description='Scrape fixture data from a website and save it to a local file.')
+parser.add_argument('-f', '--file', required=True,
+                help='Filename of the fixtures to be updated')
+args = parser.parse_args()
+
 all_fixtures = []
 # en.as.com has gameweek specific fixture URLs, need to append gameweek # to URL
 for gameweek in range(1, 39):
@@ -83,7 +91,7 @@ for gameweek in range(1, 39):
     time.sleep(5)
 
 # Save to local file (for now)
-fixture_filename = "./fixtures.json"
+fixture_filename = args.file
 print("Done, dumping to {}".format(fixture_filename))
 with open(fixture_filename, 'w') as fixture_file:
     json.dump(all_fixtures, fixture_file)

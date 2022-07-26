@@ -20,7 +20,8 @@ parser.add_argument('-ch', '--channel', required=True,
         help='Slack channel ID to post the message to')
 parser.add_argument('-p', '--people', required=True,
         help='Filename of the club-to-person mappings we care about')
-
+parser.add_argument('-f', '--file', required=True,
+        help='Filename of the fixtures to be updated')
 args = parser.parse_args()
 
 # Helper method(s)
@@ -63,7 +64,7 @@ club_to_person = readJSONFile(mapping_file)
   "datetime_utc": "2023-03-11T15:00:00+00:00"
 }
 '''
-all_fixtures = readJSONFile('./fixtures.json')
+all_fixtures = readJSONFile(args.file)
 
 
 today = datetime.utcnow().date()
@@ -88,11 +89,12 @@ for fixture in all_fixtures:
 # If there are match ups, build the notification message
 if fixture_notifications:
     message = "There are some match ups tomorrow!"
+    local_timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
     for fixture in fixture_notifications:
         message = message + "\n"
 
         fixture_datetime = fixture['datetime_utc']
-        in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
+        in_pst = fixture_datetime.astimezone(timezone(local_timezone))
         friendly_time = in_pst.strftime("%I%p").lower()
 
         home = fixture['home']
