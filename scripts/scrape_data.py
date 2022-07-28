@@ -66,11 +66,15 @@ from bs4 import BeautifulSoup
 '''
 en_as_com_url = "https://en.as.com/resultados/futbol/inglaterra/2022_2023/jornada/regular_a_"
 
+# Helper method(s)
+def readJSONFile(filename):
+    with open(filename, 'r') as f:
+        return json.loads(f.read())
 
 # Read input from command line
 parser = argparse.ArgumentParser(description='Scrape fixture data from a website and save it to a local file.')
 parser.add_argument('-f', '--file', required=True,
-                help='Filename of the fixtures to be updated')
+        help='Filename of the fixtures to be updated')
 args = parser.parse_args()
 
 all_fixtures = []
@@ -89,6 +93,15 @@ for gameweek in range(1, 39):
     # Sleep for 5 seconds so that we don't get flagged by the website
     print("Finished with Gameweek {}, sleeping for 5 seconds...".format(gameweek))
     time.sleep(5)
+
+file_fixtures = readJSONFile(args.file)
+
+for fixture in all_fixtures:
+    if fixture not in file_fixtures:
+        print("New fixture to add: {}".format(fixture))
+for fixture in file_fixtures:
+    if fixture not in all_fixtures:
+        print("Old fixture to remove: {}".format(fixture))
 
 # Save to local file (for now)
 fixture_filename = args.file
