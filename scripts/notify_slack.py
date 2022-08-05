@@ -90,12 +90,11 @@ print("Fixture notifications: {}".format(fixture_notifications))
 # If there are match ups, build the notification message
 if fixture_notifications:
     message = "There are some match ups tomorrow!"
-    local_timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
     for fixture in fixture_notifications:
         message = message + "\n"
 
         fixture_datetime = fixture['datetime_utc']
-        in_pst = fixture_datetime.astimezone(timezone(local_timezone))
+        in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
         friendly_time = in_pst.strftime("%I%p").lower()
 
         home = fixture['home']
