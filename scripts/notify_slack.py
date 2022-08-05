@@ -6,8 +6,8 @@ import json
 import logging
 import pytz
 import sys
-
-from datetime import datetime
+import datetime
+#from datetime import datetime
 from pytz import timezone
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -67,7 +67,7 @@ club_to_person = readJSONFile(mapping_file)
 all_fixtures = readJSONFile(args.file)
 
 
-today = datetime.utcnow().date()
+today = datetime.datetime.utcnow().date()
 
 # Compute what fixtures we need to even notify about
 fixture_notifications = []
@@ -77,7 +77,7 @@ for fixture in all_fixtures:
     away_team = fixture['away']
     if home_team in club_to_person and away_team in club_to_person:
         fixture_time = fixture['datetime_utc']
-        fixture_datetime = datetime.strptime(fixture_time + " +0000", "%Y-%m-%dT%H:%M:%S %z")
+        fixture_datetime = datetime.datetime.strptime(fixture_time + " +0000", "%Y-%m-%dT%H:%M:%S %z")
         fixture_date = fixture_datetime.date()
 
         days_until_game = (fixture_date - today).days
@@ -86,10 +86,11 @@ for fixture in all_fixtures:
             fixture['datetime_utc'] = fixture_datetime
             fixture_notifications.append(fixture)
 
+print("Fixture notifications: {}".format(fixture_notifications))
 # If there are match ups, build the notification message
 if fixture_notifications:
     message = "There are some match ups tomorrow!"
-    local_timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
+    local_timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
     for fixture in fixture_notifications:
         message = message + "\n"
 
@@ -107,7 +108,8 @@ if fixture_notifications:
 
     channel_id = args.channel
     try:
-        client.chat_postMessage(channel=channel_id, text=message)
+        print("Sending message to Slack: \n'''\n{}\n'''".format(message))
+        #client.chat_postMessage(channel=channel_id, text=message)
         print("Done!")
     except SlackApiError as e:
         print(f"Error: {e}")

@@ -77,12 +77,16 @@ parser.add_argument('-f', '--file', required=True,
         help='Filename of the fixtures to be updated')
 args = parser.parse_args()
 
+print("Starting fixture scraping.")
+
 all_fixtures = []
 # en.as.com has gameweek specific fixture URLs, need to append gameweek # to URL
 for gameweek in range(1, 39):
     url = en_as_com_url + str(gameweek)
     soup = BeautifulSoup(requests.get(url).text, features="html.parser")
     fixtures = soup.find_all('li', "list-resultado")
+    if not fixtures:
+        print("No fixtures found for gameweek {}".format(gameweek))
     for fixture in fixtures:
         home_team = fixture.find("div", "equipo-local").find("span", "nombre-equipo").string
         away_team = fixture.find("div", "equipo-visitante").find("span", "nombre-equipo").string

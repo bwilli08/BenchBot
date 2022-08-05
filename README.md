@@ -1,5 +1,6 @@
 # Premier League Match Bot
 
+Scraping script isn't printing to fixture file for some reason
 ## My Useful Commands
 ```
 python3 get_channels.py -c .credentials/cavilist_channel_credentials
