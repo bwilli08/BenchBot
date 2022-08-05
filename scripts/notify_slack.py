@@ -82,20 +82,20 @@ for fixture in all_fixtures:
 
         days_until_game = (fixture_date - today).days
         # Game is tomorrow
-        if days_until_game == 1:
+        if days_until_game < 7:
             fixture['datetime_utc'] = fixture_datetime
             fixture_notifications.append(fixture)
 
 print("Fixture notifications: {}".format(fixture_notifications))
 # If there are match ups, build the notification message
 if fixture_notifications:
-    message = "There are some match ups tomorrow!"
+    message = "There are some match ups this week!"
     for fixture in fixture_notifications:
         message = message + "\n"
 
         fixture_datetime = fixture['datetime_utc']
         in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
-        friendly_time = in_pst.strftime("%I%p").lower()
+        friendly_time = in_pst.strftime("%a %I%p")
 
         home = fixture['home']
         away = fixture['away']
@@ -108,7 +108,7 @@ if fixture_notifications:
     channel_id = args.channel
     try:
         print("Sending message to Slack: \n'''\n{}\n'''".format(message))
-        #client.chat_postMessage(channel=channel_id, text=message)
+        client.chat_postMessage(channel=channel_id, text=message)
         print("Done!")
     except SlackApiError as e:
         print(f"Error: {e}")
