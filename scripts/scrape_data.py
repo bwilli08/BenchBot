@@ -111,6 +111,6 @@ for fixture in file_fixtures:
 fixture_filename = args.file
 print("Done, dumping to {}".format(fixture_filename))
 with open(fixture_filename, 'w') as fixture_file:
-    json.dump(all_fixtures, fixture_file)
+    json.dump(file_fixtures, fixture_file, indent=4)
 
 
