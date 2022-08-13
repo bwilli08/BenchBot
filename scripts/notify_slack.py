@@ -82,7 +82,7 @@ for fixture in all_fixtures:
 
         days_until_game = (fixture_date - today).days
         # Game is tomorrow
-        if days_until_game < 7:
+        if days_until_game < 7 and days_until_game >= 0:
             fixture['datetime_utc'] = fixture_datetime
             fixture_notifications.append(fixture)
 
