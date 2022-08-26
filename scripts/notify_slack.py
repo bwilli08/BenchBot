@@ -95,7 +95,7 @@ if fixture_notifications:
 
         fixture_datetime = fixture['datetime_utc']
         in_pst = fixture_datetime.astimezone(timezone('US/Pacific'))
-        friendly_time = in_pst.strftime("%a %I%p")
+        friendly_time = in_pst.strftime("%a %I:%M%p")
 
         home = fixture['home']
         away = fixture['away']
